@@ -60,6 +60,12 @@ rr <- Match(Y=Y, Tr=Tr, X=ps, M=1, ties=FALSE, replace=FALSE, estimand='ATT')
 summary(rr) # The default estimate is ATT here
 ls(rr)
 
+rr2 <- Match(Y=Y, Tr=Tr, X=ps, M=1, ties=TRUE, replace=TRUE, estimand='ATT')
+summary(rr2) # The default estimate is ATT here
+length(unique(rr2$index.control))
+length(unique(rr$index.control))
+ls(rr2)
+
 ## Using the Matchit package
 matchit.out <- matchit(lalonde.formu, data=lalonde)
 summary(matchit.out)
@@ -124,7 +130,8 @@ cv.bal.psa(covars, lalonde$treat, ps, strata)
 ## Phase II
 
 loess.psa(response=Y, treatment=Tr, propensity=ps) #from PSAgraphics
-loess.plot(ps, response=Y, treatment=as.logical(Tr), method='loess') #from multilevelPSA
+loess.plot(ps, response=Y, treatment=as.logical(Tr), method='loess', plot.strata=10) #from multilevelPSA
+loess.plot(ps, response=log(Y+1), treatment=as.logical(Tr), plot.strata=10) #from multilevelPSA
 
 ## For matching methods
 matches <- cbind(Treat=rr$index.treated, Control=rr$index.control)
